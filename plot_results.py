@@ -9,8 +9,7 @@ def main():
     np.random.seed(100)
     m_true = np.random.randn(15)
 
-    keys = {"file_name": '/HDD/geostearing/gan-geosteering/fluvial2chanel15Param/netG_epoch_2816.pth',
-        'bit_pos' : [0, 4, 8, 12, 16, 20, 24, 28, 32]}
+    keys = {'bit_pos' : [0, 4, 8, 12, 16, 20, 24, 28, 32]}
     worker =Gan.remote(keys=keys)
     task = worker.call_sim.remote(input=m_true, output_field=True)
     img_true, val_true = ray.get(task)
