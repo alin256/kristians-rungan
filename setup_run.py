@@ -28,4 +28,7 @@ def main():
         for el in keys['bit_pos']:
             writer.writerow([str(el)])
 
+    mean_f = np.zeros(60)
+    np.savez('mean_field.npz', mean_f)
+
 main()

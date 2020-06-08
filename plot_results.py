@@ -1,15 +1,18 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import ray
+import sys
+sys.path.append('../gan-geosteering')
 from log_gan import Gan
 
 ray.init()
 
 def main():
     np.random.seed(100)
-    m_true = np.random.randn(15)
+    m_true = np.random.randn(60)
 
-    keys = {'bit_pos' : [0, 4, 8, 12, 16, 20, 24, 28, 32]}
+    keys = {'bit_pos' : [0, 4, 8, 12, 16, 20, 24, 28, 32],
+            'vec_size' : 60}
     worker =Gan.remote(keys=keys)
     task = worker.call_sim.remote(input=m_true, output_field=True)
     img_true, val_true = ray.get(task)
