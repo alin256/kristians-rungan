@@ -11,20 +11,24 @@ def main():
     np.random.seed(100)
     m_true = np.random.randn(60)
 
-    keys = {'bit_pos' : [0, 4, 8, 12, 16, 20, 24, 28, 32],
+    keys = {'bit_pos': [0, 1, 2, 3, 4, 5, 6, 7, 8],
             'vec_size' : 60}
-    worker =Gan.remote(keys=keys)
+    worker = Gan.remote(keys=keys)
     task = worker.call_sim.remote(input=m_true, output_field=True)
     img_true, val_true = ray.get(task)
 
-    states = [el['m'] for el in np.load('temp_state_iter.npz',allow_pickle=True)['arr_0'] if el is not None]
+    #states = [el['m'] for el in np.load('temp_state_iter.npz',allow_pickle=True)['arr_0'] if el is not None]
     #states = [el['m'] for el in np.load('temp_state_assim.npz',allow_pickle=True)['arr_0'] if el is not None]
+    states = [el['m'] for el in np.load('temp_state_mda.npz', allow_pickle=True)['arr_0'] if el is not None]
     states.append(np.load('final.npz',allow_pickle=True)['m'])
+
+    plt_field([img_true], 'true')
 
     plt_std(worker, states)
     plt_mean_diff(worker, states, img_true)
     plt_std_diff(worker, states, img_true)
     plt_data(worker,states, val_true)
+    plt_mean(worker, states)
 
 
 def plt_data(w, states, true_data):
@@ -48,8 +52,7 @@ def plt_data(w, states, true_data):
         plt.plot(np.array(prior_fcs)[:,pos,:].T/true_data['res'][pos, :][:,np.newaxis],'k');
         plt.plot(np.array(post_fcs)[:, pos, :].T/true_data['res'][pos, :][:,np.newaxis],'--b');
         plt.plot(true_data['res'][pos, :]/true_data['res'][pos, :], 'r');
-        plt.title(f'position {pos}');plt.savefig(path + f'data_pos_{pos}.png',bbox_inches='tight');plt.close()
-
+        plt.title(f'position {pos}');plt.savefig(path + f'data_pos_{pos}.pdf',bbox_inches='tight');plt.close()
 
 
 def plt_mean_diff(w,st,img_true):
@@ -114,13 +117,13 @@ def plt_field(val,ftype):
     for i,el in enumerate(val):
         plt.subplot(num_rows,num_colums,i+1);
         plt.imshow(el[0,:,:],cmap='jet');plt.colorbar();plt.title(f'Iteration {i}');
-    plt.savefig(path+ftype+'_value_chl1.png');plt.close()
+    plt.savefig(path+ftype+'_value_chl1.pdf');plt.close()
     plt.figure();
     for i,el in enumerate(val):
         plt.subplot(num_rows, num_colums, i+1);
         plt.imshow(el[1, :, :], cmap='jet');plt.colorbar();
         plt.title(f'Iteration {i}');
-    plt.savefig(path + ftype+'_value_chl2.png');
+    plt.savefig(path + ftype+'_value_chl2.pdf');
     plt.close()
 
 

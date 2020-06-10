@@ -9,11 +9,12 @@ ray.init()
 
 
 def main():
-    np.random.seed(100)
+    #np.random.seed(100)
+    np.random.seed(0)
     m_true = np.random.randn(60) * 0.01
     
-    keys = {'bit_pos' : [0, 4, 8, 12, 16, 20, 24, 28, 32],
-            'vec_size' : 60}
+    keys = {'bit_pos': [0, 1, 2, 3, 4, 5, 6, 7, 8],
+            'vec_size': 60}
     worker = Gan.remote(keys=keys)
     task = worker.call_sim.remote(input=m_true, output_field=True)
     img,val = ray.get(task)
