@@ -11,7 +11,7 @@ ray.init()
 def main():
     #np.random.seed(100)
     np.random.seed(0)
-    m_true = np.random.randn(60) * 0.01
+    m_true = np.random.randn(60) * 1e-3
     
     keys = {'bit_pos': [0, 1, 2, 3, 4, 5, 6, 7, 8],
             'vec_size': 60}
