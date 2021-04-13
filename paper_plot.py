@@ -87,9 +87,9 @@ def plot_images():
         tot_val = f[el]
         if 'img' in el:
             for i in range(3):
-                plt.figure();plt.imshow(tot_val[:,i,:,:].mean(axis=0));plt.colorbar();
+                plt.figure();plt.imshow(tot_val[:,i,:,:].mean(axis=0),interpolation='none');plt.colorbar();
                 plt.plot([0,1,2,3,4,5,6,7,8],[32,32,32,32,32,32,32,32,32],'*r');plt.savefig(path+f'{el}_mean_chl_{i}.png',bbox_inches='tight');plt.close()
-                plt.figure();plt.imshow(tot_val[:,i,:,:].std(ddof=1,axis=0));plt.colorbar();
+                plt.figure();plt.imshow(tot_val[:,i,:,:].std(ddof=1,axis=0),interpolation='none');plt.colorbar();
                 plt.plot([0,1,2,3,4,5,6,7,8],[32,32,32,32,32,32,32,32,32],'*r');plt.savefig(path+f'{el}_std_chl_{i}.png',bbox_inches='tight');plt.close()
                 if 'true' in el:
                     num_samp = 1
@@ -100,13 +100,13 @@ def plot_images():
                         indx = tot_mcmc_indx[j]
                     else:
                         indx = j
-                    plt.figure();plt.imshow(tot_val[indx,i,:,:]);plt.colorbar();
+                    plt.figure();plt.imshow(tot_val[indx,i,:,:],interpolation='none');plt.colorbar();
                     plt.plot([0,1,2,3,4,5,6,7,8],[32,32,32,32,32,32,32,32,32],'*r');plt.savefig(path+f'{el}_real_{j}_chl_{i}.png',bbox_inches='tight');plt.close()
 
         else:
-            plt.figure();plt.imshow(tot_val.mean(axis=0).T);plt.colorbar();
+            plt.figure();plt.imshow(tot_val.mean(axis=0).T,interpolation='none');plt.colorbar();
             plt.plot([0,1,2,3,4,5,6,7,8],[32,32,32,32,32,32,32,32,32],'*r');plt.savefig(path+f'{el}_mean.png',bbox_inches='tight');plt.close()
-            plt.figure();plt.imshow(tot_val.std(ddof=1,axis=0).T);plt.colorbar();
+            plt.figure();plt.imshow(tot_val.std(ddof=1,axis=0).T,interpolation='none');plt.colorbar();
             plt.plot([0,1,2,3,4,5,6,7,8],[32,32,32,32,32,32,32,32,32],'*r');plt.savefig(path+f'{el}_std.png',bbox_inches='tight');plt.close()
             if 'true' in el:
                 num_samp = 1
@@ -118,7 +118,7 @@ def plot_images():
                 else:
                     indx = j
                 print(f'ploting {el} realization {indx}')
-                plt.figure();plt.imshow(tot_val[indx,:,:].T);plt.colorbar();
+                plt.figure();plt.imshow(tot_val[indx,:,:].T,interpolation='none');plt.colorbar();
                 plt.plot([0,1,2,3,4,5,6,7,8],[32,32,32,32,32,32,32,32,32],'*r');plt.savefig(path+f'{el}_real_{j}.png',bbox_inches='tight');plt.close()
 
 #precalc()

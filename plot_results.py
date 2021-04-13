@@ -116,12 +116,12 @@ def plt_field(val,ftype):
     plt.figure();
     for i,el in enumerate(val):
         plt.subplot(num_rows,num_colums,i+1);
-        plt.imshow(el[0,:,:],cmap='jet');plt.colorbar();plt.title(f'Iteration {i}');
+        plt.imshow(el[0,:,:],cmap='jet',interpolation='none');plt.colorbar();plt.title(f'Iteration {i}');
     plt.savefig(path+ftype+'_value_chl1.pdf');plt.close()
     plt.figure();
     for i,el in enumerate(val):
         plt.subplot(num_rows, num_colums, i+1);
-        plt.imshow(el[1, :, :], cmap='jet');plt.colorbar();
+        plt.imshow(el[1, :, :], cmap='jet',interpolation='none');plt.colorbar();
         plt.title(f'Iteration {i}');
     plt.savefig(path + ftype+'_value_chl2.pdf');
     plt.close()
