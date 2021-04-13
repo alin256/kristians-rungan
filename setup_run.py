@@ -1,6 +1,7 @@
 import numpy as np
 import ray
 import sys
+import matplotlib.pyplot as plt
 
 sys.path.append('../gan-geosteering')
 from log_gan import Gan
@@ -18,6 +19,7 @@ def main():
     worker = Gan.remote(keys=keys)
     task = worker.call_sim.remote(input=m_true, output_field=True)
     img,val = ray.get(task)
+    plt.imshow(img[0,:,:]);plt.colorbar();plt.savefig('True_GAN_field.png');plt.close()
 
     with open('true_data.csv','w') as f:
         writer = csv.writer(f)
@@ -31,5 +33,6 @@ def main():
 
     mean_f = np.zeros(60)
     np.savez('mean_field.npz', mean_f)
+    np.savez('true_field.npz', img)
 
 main()

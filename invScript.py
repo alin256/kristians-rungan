@@ -1,6 +1,6 @@
-# # Imports
-import sys
-sys.path.insert(0,'../pipt_gan') # ray implementation
+# Imports
+#import sys
+#sys.path.insert(0,'../pipt_gan') # ray implementation
 import ip
 import numpy as np
 
