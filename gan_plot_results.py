@@ -15,14 +15,36 @@ def get_true():
 def get_prior():
     prior_mean = np.load('mean_field.npz', allow_pickle=True)['arr_0']
     np.random.seed(0)
-    m_prior = np.dot(prior_mean[:, np.newaxis], np.ones((1, 500))) \
-              + np.dot(np.linalg.cholesky(0.6 * np.eye(60)), np.random.randn(60, 500))
+    # m_prior = np.dot(prior_mean[:, np.newaxis], np.ones((1, 500))) + np.dot(np.linalg.cholesky(0.6 * np.eye(60)),
+    #                                                                         np.random.randn(60, 500))
+    # m_prior = np.dot(np.linalg.cholesky(0.6 * np.eye(60)), np.random.randn(60, 500))
+    m_prior = 0.2 * np.dot(prior_mean[:, np.newaxis], np.ones((1, 500))) \
+            + np.dot(np.linalg.cholesky(0.9 * np.eye(60)), np.random.randn(60, 500))
     return m_prior
 
 
 def get_posterior():
     post_save = np.load('final.npz', allow_pickle=True)['m']
     return post_save
+
+
+def plot_sand_probability(ensemble, label=''):
+    posterior_earh_models = (ensemble + 1.)/2.
+    mean_model = np.mean(posterior_earh_models, 0)
+    plt.figure()
+    plt.imshow(1.-mean_model[0, :, :],interpolation='none',vmin=0.,vmax=1.,cmap='hot')
+    plt.title('Probability of sand ({})'.format(label))
+    plt.colorbar()
+
+    plt.figure()
+    plt.imshow(mean_model[1, :, :],interpolation='none',vmin=0.,vmax=1.,cmap='hot')
+    plt.title('Probability of good sand ({})'.format(label))
+    plt.colorbar()
+
+    # plt.figure()
+    # plt.imshow(mean_model[2, :, :],interpolation='none',vmin=0.,vmax=1.,cmap='hot')
+    # plt.title('Probability of 2')
+    # plt.colorbar()
 
 
 if __name__ == '__main__':
@@ -35,25 +57,14 @@ if __name__ == '__main__':
 
     ray.init()
     worker = Gan.remote(keys=keys)
-    task = worker.generate_earth_model.remote(input=prior)
-    posterior_earh_models = ray.get(task)
-    posterior_earh_models = (posterior_earh_models + 1.)/2.
-    mean_model = np.mean(posterior_earh_models, 0)
+    task_prior = worker.generate_earth_model.remote(input=prior)
+    task_posterior = worker.generate_earth_model.remote(input=posterior)
 
-    plt.figure()
-    plt.imshow(1.-mean_model[0, :, :],interpolation='none',vmin=0.,vmax=1.,cmap='summer')
-    plt.title('Probability of sand')
-    plt.colorbar()
+    prior_earth_model = ray.get(task_prior)
+    posterior_earth_model = ray.get(task_posterior)
 
-    plt.figure()
-    plt.imshow(mean_model[1, :, :],interpolation='none',vmin=0.,vmax=1.,cmap='summer')
-    plt.title('Probability of 1')
-    plt.colorbar()
-
-    plt.figure()
-    plt.imshow(mean_model[2, :, :],interpolation='none',vmin=0.,vmax=1.,cmap='summer')
-    plt.title('Probability of 2')
-    plt.colorbar()
+    plot_sand_probability(prior_earth_model, label='less informed prior')
+    plot_sand_probability(posterior_earth_model, label='posterior')
 
     plt.show()
 
