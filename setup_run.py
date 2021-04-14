@@ -7,7 +7,6 @@ sys.path.append('../gan-geosteering')
 from log_gan import Gan
 import csv
 
-ray.init()
 
 
 def main_script():
@@ -39,10 +38,11 @@ def main_script():
         for el in keys['bit_pos']:
             writer.writerow([str(el)])
 
-    mean_f = m_true * 0.6
+    mean_f = m_true * 0.25
     np.savez('mean_field.npz', mean_f)
 
 
 
 if __name__ == '__main__':
+    ray.init()
     main_script()

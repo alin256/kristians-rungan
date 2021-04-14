@@ -2,6 +2,7 @@ import numpy as np
 import sys
 import ray
 import matplotlib.pyplot as plt
+import setup_run
 sys.path.append('../gan-geosteering')
 from log_gan import Gan
 
@@ -13,12 +14,13 @@ def get_true():
     return m_true
 
 def get_prior():
+    setup_run.main_script()
     prior_mean = np.load('mean_field.npz', allow_pickle=True)['arr_0']
     np.random.seed(0)
     # m_prior = np.dot(prior_mean[:, np.newaxis], np.ones((1, 500))) + np.dot(np.linalg.cholesky(0.6 * np.eye(60)),
     #                                                                         np.random.randn(60, 500))
     # m_prior = np.dot(np.linalg.cholesky(0.6 * np.eye(60)), np.random.randn(60, 500))
-    m_prior = 0.2 * np.dot(prior_mean[:, np.newaxis], np.ones((1, 500))) \
+    m_prior = np.dot(prior_mean[:, np.newaxis], np.ones((1, 500))) \
             + np.dot(np.linalg.cholesky(0.9 * np.eye(60)), np.random.randn(60, 500))
     return m_prior
 
@@ -48,6 +50,7 @@ def plot_sand_probability(ensemble, label=''):
 
 
 if __name__ == '__main__':
+    ray.init()
     true = get_true()
     prior = get_prior()
     posterior = get_posterior()
@@ -55,7 +58,7 @@ if __name__ == '__main__':
     keys = {'bit_pos': [0, 1, 2, 3, 4, 5, 6, 7, 8],
             'vec_size': 60}
 
-    ray.init()
+
     worker = Gan.remote(keys=keys)
     task_prior = worker.generate_earth_model.remote(input=prior)
     task_posterior = worker.generate_earth_model.remote(input=posterior)
