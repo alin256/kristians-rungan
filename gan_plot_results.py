@@ -13,6 +13,7 @@ def get_true():
     m_true = numpy_single.copy()
     return m_true
 
+
 def get_prior():
     setup_run.main_script()
     prior_mean = np.load('mean_field.npz', allow_pickle=True)['arr_0']
@@ -67,7 +68,7 @@ if __name__ == '__main__':
     posterior_earth_model = ray.get(task_posterior)
 
     plot_sand_probability(prior_earth_model, label='less informed prior')
-    plot_sand_probability(posterior_earth_model, label='posterior')
+    # plot_sand_probability(posterior_earth_model, label='posterior')
 
     plt.show()
 
