@@ -33,7 +33,10 @@ def get_posterior():
 
 def plot_sand_probability(ensemble, label=''):
     posterior_earh_models = (ensemble + 1.)/2.
-    mean_model = np.mean(posterior_earh_models, 0)
+    if len(ensemble.shape) == 4:
+        mean_model = np.mean(posterior_earh_models, 0)
+    else:
+        mean_model = np.round(ensemble)
     plt.figure()
     plt.imshow(1.-mean_model[0, :, :],interpolation='none',vmin=0.,vmax=1.,cmap='hot')
     plt.title('Probability of sand ({})'.format(label))
@@ -61,14 +64,17 @@ if __name__ == '__main__':
 
 
     worker = Gan.remote(keys=keys)
+    task_true = worker.generate_earth_model.remote(input=true)
     task_prior = worker.generate_earth_model.remote(input=prior)
     task_posterior = worker.generate_earth_model.remote(input=posterior)
 
+    true_earth_model = ray.get(task_true)
     prior_earth_model = ray.get(task_prior)
     posterior_earth_model = ray.get(task_posterior)
 
+    plot_sand_probability(true_earth_model, label='true model')
     plot_sand_probability(prior_earth_model, label='less informed prior')
-    # plot_sand_probability(posterior_earth_model, label='posterior')
+    plot_sand_probability(posterior_earth_model, label='posterior')
 
     plt.show()
 
