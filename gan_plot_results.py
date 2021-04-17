@@ -26,8 +26,8 @@ def get_prior():
     return m_prior
 
 
-def get_posterior():
-    post_save = np.load('final.npz', allow_pickle=True)['m']
+def get_posterior(filename='final.npz'):
+    post_save = np.load(filename, allow_pickle=True)['m']
     return post_save
 
 
@@ -57,7 +57,8 @@ if __name__ == '__main__':
     ray.init()
     true = get_true()
     prior = get_prior()
-    posterior = get_posterior()
+    posterior = get_posterior('final_8.npz')
+    posterior2 = get_posterior('final2.npz')
 
     keys = {'bit_pos': [0, 1, 2, 3, 4, 5, 6, 7, 8],
             'vec_size': 60}
@@ -67,14 +68,22 @@ if __name__ == '__main__':
     task_true = worker.generate_earth_model.remote(input=true)
     task_prior = worker.generate_earth_model.remote(input=prior)
     task_posterior = worker.generate_earth_model.remote(input=posterior)
+    task_posterior2 = worker.generate_earth_model.remote(input=posterior2)
 
     true_earth_model = ray.get(task_true)
     prior_earth_model = ray.get(task_prior)
     posterior_earth_model = ray.get(task_posterior)
+    posterior_earth_model2 = ray.get(task_posterior2)
+
+    task_convert = worker.convert_to_resistivity_poor.remote(posterior_earth_model)
+    converted_posterior = ray.get(task_convert)
+
 
     plot_sand_probability(true_earth_model, label='true model')
     plot_sand_probability(prior_earth_model, label='less informed prior')
     plot_sand_probability(posterior_earth_model, label='posterior')
+    plot_sand_probability(posterior_earth_model2, label='posterior2')
+
 
     plt.show()
 
