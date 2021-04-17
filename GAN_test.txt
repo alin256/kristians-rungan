@@ -79,7 +79,7 @@ REL	1
 PRIOR_M
 VARIO	exp
 MEAN	mean_field.npz
-VAR	2
+VAR	1
 #VAR	0.6
 RANGE	0
 ANISO	0 
