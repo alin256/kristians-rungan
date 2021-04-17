@@ -31,7 +31,31 @@ def get_posterior(filename='final.npz'):
     return post_save
 
 
-def plot_sand_probability(ensemble, label=''):
+def plot_resistivity(resistivity_ensemble, label='', plot_realizatoins=False):
+    if len(resistivity_ensemble.shape) == 3:
+        mean_model = np.mean(resistivity_ensemble, 0)
+    else:
+        mean_model = resistivity_ensemble
+    plt.figure()
+    plt.imshow(mean_model, interpolation='none', vmin=1.,vmax=150., cmap='summer')
+    plt.title('Resistivity mean ({}), ohm m'.format(label))
+    plt.colorbar()
+
+    if len(resistivity_ensemble.shape) == 3:
+        std_model = np.std(resistivity_ensemble, axis=0)
+        plt.figure()
+        plt.imshow(std_model, interpolation='none', vmin=1.,vmax=150., cmap='summer')
+        plt.title('Resistivity std ({}), ohm m'.format(label))
+        plt.colorbar()
+
+    if len(resistivity_ensemble.shape) == 3 and plot_realizatoins:
+        for i in range(10):
+            plt.figure()
+            plt.imshow(resistivity_ensemble[i, :, :], vmin=1., vmax=150., cmap='summer')
+            # plt.title('Facies type')
+
+
+def plot_sand_probability(ensemble, label='', plot_realizatoins=False):
     posterior_earh_models = (ensemble + 1.)/2.
     if len(ensemble.shape) == 4:
         mean_model = np.mean(posterior_earh_models, 0)
@@ -46,6 +70,13 @@ def plot_sand_probability(ensemble, label=''):
     plt.imshow(mean_model[1, :, :],interpolation='none',vmin=0.,vmax=1.,cmap='hot')
     plt.title('Probability of good sand ({})'.format(label))
     plt.colorbar()
+
+    if len(ensemble.shape) == 4 and plot_realizatoins:
+        index_image = np.argmax(ensemble, 1)
+        for i in range(10):
+            plt.figure()
+            plt.imshow(index_image[i, :, :], cmap='Paired')
+            plt.title('Facies type')
 
     # plt.figure()
     # plt.imshow(mean_model[2, :, :],interpolation='none',vmin=0.,vmax=1.,cmap='hot')
@@ -75,15 +106,21 @@ if __name__ == '__main__':
     posterior_earth_model = ray.get(task_posterior)
     posterior_earth_model2 = ray.get(task_posterior2)
 
+    task_convert = worker.convert_to_resistivity_poor.remote(prior_earth_model)
+    converted_prior = ray.get(task_convert)
+
     task_convert = worker.convert_to_resistivity_poor.remote(posterior_earth_model)
     converted_posterior = ray.get(task_convert)
+
+    plot_resistivity(converted_prior, label='prior')
+    plot_resistivity(converted_posterior, label='posterior', plot_realizatoins=True)
+    plt.show()
 
 
     plot_sand_probability(true_earth_model, label='true model')
     plot_sand_probability(prior_earth_model, label='less informed prior')
-    plot_sand_probability(posterior_earth_model, label='posterior')
-    plot_sand_probability(posterior_earth_model2, label='posterior2')
+    plot_sand_probability(posterior_earth_model, label='posterior', plot_realizatoins=True)
+    # plot_sand_probability(posterior_earth_model2, label='posterior2')
 
 
-    plt.show()
 
