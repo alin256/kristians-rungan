@@ -15,7 +15,7 @@ def main_script():
     numpy_single = numpy_input['arr_0']
     m_true = numpy_single.copy()
 
-    keys = {'bit_pos': [0, 1, 2, 3, 4, 5, 6, 7, 8],
+    keys = {'bit_pos': [9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
             'vec_size': 60}
     worker = Gan.remote(keys=keys)
     task = worker.call_sim.remote(input=m_true, output_field=True)
