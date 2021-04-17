@@ -9,5 +9,6 @@ def main():
     #random.seed(5)
     np.random.seed(0)
     ip.run_inversion('GAN_test.txt', 'final')
+    # ip.run_inversion('GAN_step2.txt', 'final2')
 if __name__ == '__main__':
     main()
