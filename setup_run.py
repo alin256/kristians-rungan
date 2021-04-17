@@ -38,7 +38,7 @@ def main_script():
             writer.writerow([str(el)])
 
     mean_f = m_true * 0.25
-    mean_f[30:40] = 0.
+    mean_f[20:44] = 0.
     np.savez('mean_field.npz', mean_f)
 
 
