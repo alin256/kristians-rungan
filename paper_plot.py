@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-plt.style.use('plots.mplstyle')
+# plt.style.use('plots.mplstyle')
 import numpy as np
 import ray
 import sys
@@ -65,17 +65,17 @@ def precalc():
     tot_true_res.append(tmp_res)
 
 
-    tot_mcmc_img = np.load('mcmc_samples.npz')['tot_mcmc_img']
-    tot_mcmc_res = []
-    for i in range(1600):
-        tmp_res = []
-        img = tot_mcmc_img[i,:,:,:]
-        for pos in range(64):
-            pixel_input = np.array(img[:,:,pos])
-            tmp_res.append([convert(pix) for pix in pixel_input.T])
-        tot_mcmc_res.append(tmp_res)
-
-    np.savez('foobar.npz',**{'res':tot_res, 'img':tot_image,'pr_res':tot_pr_res,'pr_img':tot_pr_image,'mcmc_res':tot_mcmc_res,'mcmc_img':tot_mcmc_img,'true_img':tot_true_image,'true_res':tot_true_res})
+    # tot_mcmc_img = np.load('mcmc_samples.npz')['tot_mcmc_img']
+    # tot_mcmc_res = []
+    # for i in range(1600):
+    #     tmp_res = []
+    #     img = tot_mcmc_img[i,:,:,:]
+    #     for pos in range(64):
+    #         pixel_input = np.array(img[:,:,pos])
+    #         tmp_res.append([convert(pix) for pix in pixel_input.T])
+    #     tot_mcmc_res.append(tmp_res)
+    #
+    # np.savez('foobar.npz',**{'res':tot_res, 'img':tot_image,'pr_res':tot_pr_res,'pr_img':tot_pr_image,'mcmc_res':tot_mcmc_res,'mcmc_img':tot_mcmc_img,'true_img':tot_true_image,'true_res':tot_true_res})
 
 def plot_images():
     path = 'upd_plots/'
@@ -121,5 +121,5 @@ def plot_images():
                 plt.figure();plt.imshow(tot_val[indx,:,:].T,interpolation='none');plt.colorbar();
                 plt.plot([0,1,2,3,4,5,6,7,8],[32,32,32,32,32,32,32,32,32],'*r');plt.savefig(path+f'{el}_real_{j}.png',bbox_inches='tight');plt.close()
 
-#precalc()
+precalc()
 plot_images()

@@ -8,8 +8,12 @@ from log_gan import Gan
 ray.init()
 
 def main():
-    np.random.seed(100)
-    m_true = np.random.randn(60)
+    # np.random.seed(100)
+    # m_true = np.random.randn(60)
+    np.random.seed(0)
+    numpy_input = np.load('../gan-geosteering/saves/chosen_realization_C1.npz')
+    numpy_single = numpy_input['arr_0']
+    m_true = numpy_single.copy()
 
     keys = {'bit_pos': [0, 1, 2, 3, 4, 5, 6, 7, 8],
             'vec_size' : 60}
@@ -47,12 +51,15 @@ def plt_data(w, states, true_data):
         val = ray.get(task)
         post_fcs.append(val['res'])
 
-    for pos in range(true_data['res'].shape[0]):
-        plt.figure();
-        plt.plot(np.array(prior_fcs)[:,pos,:].T/true_data['res'][pos, :][:,np.newaxis],'k');
-        plt.plot(np.array(post_fcs)[:, pos, :].T/true_data['res'][pos, :][:,np.newaxis],'--b');
-        plt.plot(true_data['res'][pos, :]/true_data['res'][pos, :], 'r');
-        plt.title(f'position {pos}');plt.savefig(path + f'data_pos_{pos}.pdf',bbox_inches='tight');plt.close()
+    for log in range(true_data['res'].shape[1]):
+        plt.figure()
+        plt.plot(np.array(prior_fcs)[:, :, log].T/true_data['res'][:, log][:,np.newaxis],'k')
+        plt.plot(np.array(post_fcs)[:, :, log].T/true_data['res'][:, log][:,np.newaxis],'--b')
+        plt.plot(true_data['res'][:, log]/true_data['res'][:, log], 'r')
+        plt.title(f'Log {log}')
+        plt.savefig(path + f'data_log_{log}.pdf',bbox_inches='tight')
+        plt.savefig(path + f'data_log_{log}.png', bbox_inches='tight',dpi=600)
+        plt.close()
 
 
 def plt_mean_diff(w,st,img_true):
@@ -116,12 +123,12 @@ def plt_field(val,ftype):
     plt.figure();
     for i,el in enumerate(val):
         plt.subplot(num_rows,num_colums,i+1);
-        plt.imshow(el[0,:,:],cmap='jet',interpolation='none');plt.colorbar();plt.title(f'Iteration {i}');
+        plt.imshow(el[0,:,:],cmap='summer',interpolation='none');plt.colorbar();plt.title(f'Iteration {i}');
     plt.savefig(path+ftype+'_value_chl1.pdf');plt.close()
     plt.figure();
     for i,el in enumerate(val):
         plt.subplot(num_rows, num_colums, i+1);
-        plt.imshow(el[1, :, :], cmap='jet',interpolation='none');plt.colorbar();
+        plt.imshow(el[1, :, :], cmap='summer',interpolation='none');plt.colorbar();
         plt.title(f'Iteration {i}');
     plt.savefig(path + ftype+'_value_chl2.pdf');
     plt.close()
