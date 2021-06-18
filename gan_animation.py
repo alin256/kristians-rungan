@@ -23,7 +23,7 @@ def _plot_resistivity(resistivity_ensemble, label='anim', grid_x=4, grid_y=8, fo
             ind = i * grid_x + j
             realizatoin = resistivity_ensemble[ind]
             ax = axs[i, j]
-            pcm = ax.imshow(resistivity_ensemble[i, :, :], norm=norm, cmap='summer', extent=global_extent)
+            pcm = ax.imshow(resistivity_ensemble[ind, :, :], norm=norm, cmap='summer', extent=global_extent)
             ax.axes.xaxis.set_visible(False)
             ax.axes.yaxis.set_visible(False)
             ax.axes.set_aspect(4)
@@ -57,4 +57,4 @@ def create_animation(model_vectors, gan_worker,
 
         _plot_resistivity(converted_prior, label=str(first_frame + frame), folder=folder)
 
-    exit(0)
+

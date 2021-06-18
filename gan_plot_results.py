@@ -209,6 +209,7 @@ if __name__ == '__main__':
     gan_animation.create_animation(posterior, worker, folder='gif_posterior')
     gan_animation.create_animation(prior, worker, folder='gif_prior')
 
+    exit(1)
 
     plot_logs(prior, worker)
 
