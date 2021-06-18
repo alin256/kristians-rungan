@@ -10,4 +10,4 @@ do
 convert resisitivity_anim_$[finish-i].png  -resize 1280x720  resisitivity_anim_$[finish+i]_r.png
 echo 'converting'$[finish+i]
 done
-convert -delay 20 -loop 0 *_r.png posterior.gif
+convert -delay 20 -loop 0 *_r.png prior.gif
