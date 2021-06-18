@@ -10,3 +10,5 @@ __pycache__/
 gif/
 
 gif_posterior/
+
+gif_prior/
