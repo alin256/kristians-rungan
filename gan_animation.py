@@ -1,18 +1,18 @@
+import os
 import matplotlib
 import matplotlib.pyplot as plt
-import numpy as np
 
 import ray
 
 global_extent = [-90, 550, -16.25, 15.75]
 
 
-def save_plot(name):
-    plt.savefig('gif/{}.png'.format(name), bbox_inches='tight', dpi=600)
+def save_plot(name, folder='gif'):
+    plt.savefig('{}/{}.png'.format(folder, name), bbox_inches='tight', dpi=600)
     # plt.savefig('eage/{}.pdf'.format(name), bbox_inches='tight')
 
 
-def _plot_resistivity(resistivity_ensemble, label='anim', grid_x=4, grid_y=8, plot_realizatoins=True):
+def _plot_resistivity(resistivity_ensemble, label='anim', grid_x=4, grid_y=8, folder='gif'):
     norm = matplotlib.colors.Normalize(vmin=1., vmax=200.0)
 
     fig, axs = plt.subplots(grid_y, grid_x, sharex=True, sharey=True, constrained_layout=True, figsize=(10, 4))
@@ -20,7 +20,7 @@ def _plot_resistivity(resistivity_ensemble, label='anim', grid_x=4, grid_y=8, pl
 
     for i in range(grid_y):
         for j in range(grid_x):
-            ind = i*grid_x + j
+            ind = i * grid_x + j
             realizatoin = resistivity_ensemble[ind]
             ax = axs[i, j]
             pcm = ax.imshow(resistivity_ensemble[i, :, :], norm=norm, cmap='summer', extent=global_extent)
@@ -29,20 +29,25 @@ def _plot_resistivity(resistivity_ensemble, label='anim', grid_x=4, grid_y=8, pl
             ax.axes.set_aspect(4)
             # plt.title('Facies type')
 
-    fig.colorbar(pcm, ax=axs[:, grid_x-1], shrink=0.6)
-    save_plot('resisitivity_anim_{}'.format(label))
+    fig.colorbar(pcm, ax=axs[:, grid_x - 1], shrink=0.6)
+    save_plot('resisitivity_anim_{}'.format(label), folder=folder)
     plt.close(fig)
 
 
 def create_animation(model_vectors, gan_worker,
+                     folder='gif',
                      grid_x=6,
                      grid_y=6,
-                     frames=30,
+                     frames=40,
                      changed_components=[0, 2, 4, 8]):
+    try:
+        os.makedirs(folder)
+    except:
+        print('Cannot create folder {}. Already there?', folder)
 
     first_frame = 100
     for frame in range(frames):
-        new_value = (frame + 0.0 - frames / 2) / frames
+        new_value = 2. * (frame + 0.0 - frames / 2) / frames
         for comp in changed_components:
             model_vectors[comp, :] = new_value
         task_prior = gan_worker.generate_earth_model.remote(input=model_vectors)
@@ -50,6 +55,6 @@ def create_animation(model_vectors, gan_worker,
         task_convert = gan_worker.convert_to_resistivity_poor.remote(prior_earth_model)
         converted_prior = ray.get(task_convert)
 
-        _plot_resistivity(converted_prior, label=str(first_frame+frame))
+        _plot_resistivity(converted_prior, label=str(first_frame + frame), folder=folder)
 
     exit(0)

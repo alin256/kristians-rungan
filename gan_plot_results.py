@@ -205,7 +205,10 @@ if __name__ == '__main__':
     worker = Gan.remote(keys=keys)
 
     import gan_animation
-    gan_animation.create_animation(prior, worker)
+
+    gan_animation.create_animation(posterior, worker, folder='gif_posterior')
+    gan_animation.create_animation(prior, worker, folder='gif_prior')
+
 
     plot_logs(prior, worker)
 
