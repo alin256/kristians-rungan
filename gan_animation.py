@@ -8,11 +8,11 @@ global_extent = [-90, 550, -16.25, 15.75]
 
 
 def save_plot(name, folder='gif'):
-    plt.savefig('{}/{}.png'.format(folder, name), bbox_inches='tight', dpi=600)
+    plt.savefig('{}/{}.png'.format(folder, name), bbox_inches='tight', dpi=200)
     # plt.savefig('eage/{}.pdf'.format(name), bbox_inches='tight')
 
 
-def _plot_resistivity(resistivity_ensemble, label='anim', grid_x=4, grid_y=8, folder='gif'):
+def _plot_resistivity(resistivity_ensemble, label='anim', grid_x=2, grid_y=3, folder='gif'):
     norm = matplotlib.colors.Normalize(vmin=1., vmax=200.0)
 
     fig, axs = plt.subplots(grid_y, grid_x, sharex=True, sharey=True, constrained_layout=True, figsize=(10, 4))
@@ -39,11 +39,11 @@ def create_animation(model_vectors, gan_worker,
                      grid_x=6,
                      grid_y=6,
                      frames=40,
-                     changed_components=[0, 2, 4, 8]):
+                     changed_components=[0, 2, 4, 8, 10, 12]):
     try:
         os.makedirs(folder)
     except:
-        print('Cannot create folder {}. Already there?', folder)
+        print('Cannot create folder {}. Already there?'.format(folder))
 
     first_frame = 100
     for frame in range(frames):
