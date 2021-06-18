@@ -35,6 +35,7 @@ def get_posterior(filename='final.npz'):
     return post_save
 
 
+
 def save_plot(name):
     plt.savefig('eage/{}.png'.format(name), bbox_inches='tight', dpi=600)
     plt.savefig('eage/{}.pdf'.format(name), bbox_inches='tight')
@@ -202,6 +203,9 @@ if __name__ == '__main__':
             'vec_size': 60}
 
     worker = Gan.remote(keys=keys)
+
+    import gan_animation
+    gan_animation.create_animation(prior, worker)
 
     plot_logs(prior, worker)
 
