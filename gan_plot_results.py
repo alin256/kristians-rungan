@@ -12,7 +12,7 @@ global_extent = [-90, 550, -16.25, 15.75]
 
 
 def get_true():
-    numpy_input = np.load('../gan-geosteering/saves/chosen_realization_C1.npz')
+    numpy_input = np.load('../gan-geosteering/saves/chosen_realization_C1_6.npz')
     numpy_single = numpy_input['arr_0']
     m_true = numpy_single.copy()
     return m_true
@@ -204,12 +204,12 @@ if __name__ == '__main__':
 
     worker = Gan.remote(keys=keys)
 
-    import gan_animation
-
-    gan_animation.create_animation(posterior, worker, folder='gif_posterior')
-    gan_animation.create_animation(prior, worker, folder='gif_prior')
-
-    exit(1)
+    # import gan_animation
+    #
+    # gan_animation.create_animation(posterior, worker, folder='gif_posterior')
+    # gan_animation.create_animation(prior, worker, folder='gif_prior')
+    #
+    # exit(1)
 
     plot_logs(prior, worker)
 
