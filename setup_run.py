@@ -11,7 +11,7 @@ import csv
 def main_script():
     # np.random.seed(100)
     np.random.seed(0)
-    numpy_input = np.load('../gan-geosteering/saves/chosen_realization_C1.npz')
+    numpy_input = np.load('../gan-geosteering/saves/chosen_realization_C1_6.npz')
     numpy_single = numpy_input['arr_0']
     m_true = numpy_single.copy()
 
@@ -37,6 +37,9 @@ def main_script():
         for el in keys['bit_pos']:
             writer.writerow([str(el)])
 
+    numpy_input = np.load('../gan-geosteering/saves/chosen_realization_C1.npz')
+    numpy_single = numpy_input['arr_0']
+    m_true = numpy_single.copy()
     mean_f = m_true * 0.25
     mean_f[20:44] = 0.
     np.savez('mean_field.npz', mean_f)
