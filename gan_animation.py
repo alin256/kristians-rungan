@@ -9,7 +9,7 @@ global_extent = [-90, 550, -16.25, 15.75]
 
 def save_plot(name, folder='gif'):
     plt.savefig('{}/{}.png'.format(folder, name), bbox_inches='tight', dpi=200)
-    # plt.savefig('eage/{}.pdf'.format(name), bbox_inches='tight')
+    # plt.savefig('example2-enrml/{}.pdf'.format(name), bbox_inches='tight')
 
 
 def _plot_resistivity(resistivity_ensemble, label='anim', grid_x=2, grid_y=3, folder='gif'):
