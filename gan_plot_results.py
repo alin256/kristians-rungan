@@ -37,8 +37,8 @@ def get_posterior(filename='final.npz'):
 
 
 def save_plot(name):
-    plt.savefig('eage/{}.png'.format(name), bbox_inches='tight', dpi=600)
-    plt.savefig('eage/{}.pdf'.format(name), bbox_inches='tight')
+    plt.savefig('new-enrml/{}.png'.format(name), bbox_inches='tight', dpi=600)
+    plt.savefig('new-enrml/{}.pdf'.format(name), bbox_inches='tight')
 
 
 def get_well_direction():
