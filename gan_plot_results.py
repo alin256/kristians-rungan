@@ -164,23 +164,30 @@ def plot_sand_probability(ensemble, label='', plot_realizatoins=False, active_we
 def plot_logs(ensemble, worker,
               use_labels=False,
               indeces=[5, 6, 7, 8, 9, 10, 11, 12],
-              names=['Att. 20 kHz', 'Att. 50 kHz', 'Phase 20 kHz', 'Phase 50 kHz', 'Dir. Im. 20 kHz', 'Dir. Im. 50 kHz', 'Dir. Re. 20 kHz', 'Dir. Re. 50 kHz']):
-    for i in range(6):
+              names=['Att. 20 kHz', 'Att. 50 kHz', 'Phase 20 kHz', 'Phase 50 kHz', 'Dir. Im. 20 kHz', 'Dir. Im. 50 kHz', 'Dir. Re. 20 kHz', 'Dir. Re. 50 kHz'],
+              plot_name=None):
+    if len(ensemble.shape) == 1:
+        ensemble = np.reshape(ensemble, (len(ensemble), -1))
+    for i in range(min(6, ensemble.shape[1])):
         task = worker.call_sim.remote(input=ensemble[:, i])
         logs = ray.get(task)['res']
-        plt.figure(figsize=(10, 2))
+        plt.figure(figsize=(10, 4))
         ax = plt.gca()
         if use_labels:
-            for j in range(0,len(indeces),2):
+            for j in range(0, len(indeces), 1):
                 curve_name = names[j]
                 plt.plot(np.arange(-80, 1, 10), logs[:, indeces[j]], label=curve_name)
+            plt.xlim((-85, 45))
             plt.legend()
-            ax.axes.xaxis.set_visible(False)
+            ax.axes.xaxis.set_visible(True)
         else:
             plt.plot(np.arange(-80, 1, 10), logs)
 
         ax.axes.yaxis.set_visible(False)
-        save_plot('logs_{}'.format(i))
+        if plot_name is None:
+            save_plot('logs_{}'.format(i))
+        else:
+            save_plot('{}_{}'.format(plot_name, i))
         plt.close()
 
 
@@ -211,6 +218,8 @@ if __name__ == '__main__':
     #
     # exit(1)
 
+    plot_logs(true, worker)
+    exit()
     plot_logs(prior, worker)
 
     task_true = worker.generate_earth_model.remote(input=true)

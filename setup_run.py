@@ -1,3 +1,5 @@
+from sys import exit
+
 import numpy as np
 import ray
 import sys
@@ -18,13 +20,15 @@ def main_script():
     keys = {'bit_pos': [0, 1, 2, 3, 4, 5, 6, 7, 8],
             'vec_size': 60}
     worker = Gan.remote(keys=keys)
+    import gan_plot_results
+    gan_plot_results.plot_logs(m_true, worker, use_labels=True, plot_name='true_logs')
+
     task = worker.call_sim.remote(input=m_true, output_field=True)
     img, val = ray.get(task)
     plt.imshow(img[0, :, :], interpolation='none')
     plt.colorbar()
     plt.savefig('True_GAN_field.png')
     plt.close()
-
     np.savez('true_img.npz', img)
 
     with open('true_data.csv', 'w') as f:
