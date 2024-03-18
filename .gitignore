@@ -1,4 +1,6 @@
 
+*mcmc.npz
+
 \.idea/
 
 log_optim_loops\.log

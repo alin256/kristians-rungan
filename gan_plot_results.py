@@ -30,8 +30,10 @@ def get_prior():
     return m_prior
 
 
-def get_posterior(filename='final.npz'):
-    post_save = np.load(filename, allow_pickle=True)['m']
+def get_posterior(filename='final.npz', content_vector_name='m', transposed=False):
+    post_save = np.load(filename, allow_pickle=True)[content_vector_name]
+    if transposed:
+        return post_save.T
     return post_save
 
 
@@ -203,7 +205,7 @@ if __name__ == '__main__':
     prior = get_prior()
     # posterior = get_posterior('final_8.npz')
     # posterior = get_posterior('final_8_dev_1.npz')
-    posterior = get_posterior()
+    posterior = get_posterior('extract_samples_example1_eage_mcmc.npz', 'tot_mcmc_para', True)
     # posterior2 = get_posterior('final2.npz')
 
     keys = {'bit_pos': [0, 1, 2, 3, 4, 5, 6, 7, 8],
@@ -218,9 +220,7 @@ if __name__ == '__main__':
     #
     # exit(1)
 
-    plot_logs(true, worker)
-    exit()
-    plot_logs(prior, worker)
+    # plot_logs(true, worker)
 
     task_true = worker.generate_earth_model.remote(input=true)
     task_prior = worker.generate_earth_model.remote(input=prior)
