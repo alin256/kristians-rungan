@@ -3,11 +3,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 import ray
 import sys
-sys.path.append('../gan-geosteering')
+sys.path.append('../gan-geosteering-101')
 from log_gan import Gan
 sys.path.append('../deepEMdeepML2/deep-borehole-inverse-problem/KERNEL')
 sys.path.append('../deepEMdeepML2/deep-borehole-inverse-problem/USER_SERGEY')
-sys.path.append('../gan-geosteering')
+sys.path.append('../gan-geosteering-101')
 from resitivity import get_resistivity_default
 
 convert = get_resistivity_default

@@ -3,7 +3,7 @@ import ray
 import sys
 import matplotlib.pyplot as plt
 
-sys.path.append('../gan-geosteering')
+sys.path.append('../gan-geosteering-101')
 from log_gan import Gan
 import csv
 
@@ -11,7 +11,7 @@ import csv
 def main_script():
     # np.random.seed(100)
     np.random.seed(0)
-    numpy_input = np.load('../gan-geosteering/saves/chosen_realization_C1.npz')
+    numpy_input = np.load('../gan-geosteering-101/saves/chosen_realization_C1.npz')
     numpy_single = numpy_input['arr_0']
     m_true = numpy_single.copy()
 

@@ -5,14 +5,14 @@ import matplotlib
 import matplotlib.pyplot as plt
 import setup_run
 
-sys.path.append('../gan-geosteering')
+sys.path.append('../gan-geosteering-101')
 from log_gan import Gan
 
 global_extent = [-90, 550, -16.25, 15.75]
 
 
 def get_true():
-    numpy_input = np.load('../gan-geosteering/saves/chosen_realization_C1.npz')
+    numpy_input = np.load('../gan-geosteering-101/saves/chosen_realization_C1.npz')
     numpy_single = numpy_input['arr_0']
     m_true = numpy_single.copy()
     return m_true

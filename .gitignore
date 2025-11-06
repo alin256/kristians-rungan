@@ -12,3 +12,5 @@ gif/
 gif_posterior/
 
 gif_prior/
+
+.venv/

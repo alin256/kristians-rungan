@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import ray
 import sys
-sys.path.append('../gan-geosteering')
+sys.path.append('../gan-geosteering-101')
 from log_gan import Gan
 
 ray.init()
@@ -11,7 +11,7 @@ def main():
     # np.random.seed(100)
     # m_true = np.random.randn(60)
     np.random.seed(0)
-    numpy_input = np.load('../gan-geosteering/saves/chosen_realization_C1.npz')
+    numpy_input = np.load('../gan-geosteering-101/saves/chosen_realization_C1.npz')
     numpy_single = numpy_input['arr_0']
     m_true = numpy_single.copy()
 
